@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+  color: #000;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 70px;
+  min-width: 70px;
+  height: 100%;
+  border-right: 1px solid #ccc;
+  padding: 100px 8px 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar > a {
+  color: blue
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.header {
+  min-height: 100px;
+  height: 10%;
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+}
+
+.content {
+  flex: 1;
+  padding: 8px;
+}

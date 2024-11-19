@@ -2,6 +2,8 @@ const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { ModuleFederationPlugin } = require('@module-federation/enhanced');
+const deps = require('./package.json').dependencies;
 
 module.exports = (_, argv) => {
   const mode = argv.mode || "development";
@@ -10,11 +12,18 @@ module.exports = (_, argv) => {
     mode: mode,
     entry: "/src/index.tsx",
     devtool: !isProduction ? "inline-source-map" : "source-map",
+    cache: false,
+    devServer: {
+      port: 3000,
+      hot: true,
+      historyApiFallback: true,
+    },
     output: {
+      publicPath: 'http://localhost:3000/',
+      clean: true,
       path: path.resolve(__dirname, "build"),
       filename: "js/[name].[contenthash:8].bundle.js",
       chunkFilename: "js/[name].[contenthash:8].chunk.js",
-      publicPath: "/",
     },
     module: {
       rules: [
@@ -65,6 +74,23 @@ module.exports = (_, argv) => {
       ])
     },
     plugins: [
+      new ModuleFederationPlugin({
+        name: 'app_consumer',
+        remotes: {
+          luminsign: 'luminsign@http://localhost:3107/mf-manifest.json'
+        },
+        shared: {
+          // ...deps,
+          react: {
+            singleton: true,
+            requiredVersion: deps.react,
+          },
+          'react-dom': {
+            singleton: true,
+            requiredVersion: deps['react-dom'],
+          },
+        },
+      }),
       new HtmlWebpackPlugin({
         template: "./src/index.html", // base html
       }),
@@ -75,7 +101,6 @@ module.exports = (_, argv) => {
       })
     ] : []),
     optimization: {
-      runtimeChunk: "single",
       minimize: isProduction,
       minimizer: [
         isProduction

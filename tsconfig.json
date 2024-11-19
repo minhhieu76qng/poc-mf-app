@@ -5,7 +5,6 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "es2015",
-
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -15,7 +14,10 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "paths":{
+      "*": ["./@mf-types/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
